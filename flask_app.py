@@ -98,4 +98,4 @@ if __name__ == "__main__":
         port = json_file["port"]
         url = json_file["url"]
     # print(ip, port, url)
-    socketio.run(app, host=ip, port=port)
+    socketio.run(app)
