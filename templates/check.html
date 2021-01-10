@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block head %}
+{% endblock %}
+
+{% block body %}
+    <script>let x;</script>
+    {% for num in numbers%}
+        <script>
+            x = '{{num}}';
+            console.log(parseInt(x) + 1);
+        </script>
+    {% endfor %}
+{% endblock %}

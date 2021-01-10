@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<script src="../static/js/registerFrom.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>Register</h1>
+
+    <table>
+        <form action="{{url_for('register')}}" id="registerForm" method="POST" onsubmit="return validForm();">
+            <tr>
+                <td>Enter username: </td>
+                <td><input type="text" id="username" name="username"></td>
+            </tr>
+            <tr>
+                <td>Enter your password</td>
+                <td><input type="password" id="password" name="password"></td>
+            </tr>
+            <tr>
+                <td>Re-enter your password: </td>
+                <td><input type="password" id="re-password" name="re-password"></td>
+            </tr>
+            <tr>
+                <td>Username length is minimum 3 characters up to 20. </td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Password must contain atleast one big letter, small letter and digit and 8 to 20 chars.</td>
+            </tr>
+            <tr>
+                <td id="valid"></td>
+            </tr>
+            
+
+            {% if user_exists %}
+            <tr><td><b>Please choose another username. User "{{username}}" already exists.</b></td></tr>
+            {% set submit = '' %}
+            {% endif %}
+
+            {% if registered %}
+            <tr>
+                <td>
+                    <p id="url" hidden>{{url_for('login')}}</p>
+                    <p>Now you can login to your acount: </p>
+                    <button class="btn" onclick="return toLogin();">Login</button>
+                </td>
+            </tr>
+            {% set submit = '' %}
+            {% endif %}
+            
+            {%if not submit %}
+            <tr><td><input type="submit" class="btn"></td></tr>
+            {% endif %}
+        </form>
+    </table>
+
+    <form action="{{url_for('main')}}">
+        <input type="submit" value="Return To Main Page." class="btn">
+    </form>
+
+{% endblock %}

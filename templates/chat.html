@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block head %}
+<script type="text/javascript" language="javascript" src="../static/js/url.js"></script> 
+<script src="../static/js/socket.io.js"></script>
+<script src="../static/js/chat.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chat.css') }}">
+
+{% endblock %}
+
+{% block body %}
+    <script>
+        //already declared in chat.js
+        activeUser = '{{user}}';
+    </script>
+    <h1>CHAT for user {{user}}.</h1>
+    <table id="chatTable">
+    {% for message in messages %}
+        <script>
+            //declared at chat.js
+            username = '{{message["username"]}}';
+            message = '{{message["message"]}}';
+            datetime = '{{message["datetime"]}}';
+            addMessage({"username": username, "message": message, 
+                        "datetime": datetime});
+        </script>
+    {% endfor %}
+    
+    <tr id="text">
+        <td>
+            <form onsubmit="onSubmit(); return false;">
+                <input id="userInput" name="userInput" type="text" class="btn" style="text-align: left;">
+                <input type="submit" value="send" class="btn" 
+                        onclick="document.getElementById('userInput').focus();">
+            </form>
+        </td>
+    </tr>
+    </table>
+
+{% endblock %}
+

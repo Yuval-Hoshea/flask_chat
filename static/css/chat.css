@@ -1,0 +1,12 @@
+.userMsg{
+    background-color: rgb(191 194 221);
+}
+
+.otherMsg{
+    background-color: aquamarine;
+}
+
+.msgInfo{
+    color: dimgray;
+    font-size: 11px;
+}

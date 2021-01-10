@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+    <form action="{{url_for('send_form')}}" method="POST">
+        <input type="submit" name="Login" value="Login" class="btn">
+        <input type="submit" name="Register" value="Register" class="btn">
+    </form>
+{% endblock %}
