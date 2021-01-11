@@ -2,6 +2,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_socketio import SocketIO
 from datetime import datetime
+import os
 
 DEV = True
 app = Flask(__name__)
@@ -14,7 +15,8 @@ if DEV:
     app.debug = True
 else:
     app.debug = False
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://kotlsxhypaemki:29aef82064a428c6ca1216afe9cda5259b53a0982afc7d832404f55db6440f02@ec2-3-211-149-196.compute-1.amazonaws.com:5432/dbdt7iphe155rm'
+    # app.secret_key = 
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 # make socketio for the app
 socketio = SocketIO(app, broadcast=True, always_connect=True)
 # make database
