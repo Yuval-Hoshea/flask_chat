@@ -36,7 +36,7 @@ def login():
         if user is None: # user does not exists...
             return render_template("login.html", cant_find_user=True, username=username)
 
-        if password != user.password:
+        if not user.correct_password(password):  # discorrect password
             return render_template("login.html", wrong_password=True, username=username)
 
         session["username"] = username
@@ -86,7 +86,6 @@ def send_message(data):
     msg = Messgae.add(session["username"], data["message"]).to_dict() 
     # emit new event for js. The js will add the message to the html.
     emit("recieveMessage", msg, include_self=True, broadcast=True)
-    print("Got new message!")
 
 
 if __name__ == "__main__":
@@ -98,4 +97,4 @@ if __name__ == "__main__":
         port = json_file["port"]
         url = json_file["url"]
     # print(ip, port, url)
-    socketio.run(app)
+    socketio.run(app, host=ip, port=port)

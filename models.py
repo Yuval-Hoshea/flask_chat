@@ -1,22 +1,19 @@
+from hashlib import sha256
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
 from flask_socketio import SocketIO
 from datetime import datetime
 import os
 
+
 DEV = True
 app = Flask(__name__)
 # app configuration
 app.secret_key = 'cdwyfhbwfilvbehvnewjncyri b9hGGJBANuvbNAJBHBjBCYIBJBAyibunxubiubUBASUBAU'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+app.debug = True
 
-if DEV:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
-    app.debug = True
-else:
-    app.debug = False
-    # app.secret_key = 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get("DATABASE_URL")
 # make socketio for the app
 socketio = SocketIO(app, broadcast=True, always_connect=True)
 # make database
@@ -26,6 +23,11 @@ db = SQLAlchemy(app)
 def current_time() -> str:
     """Return current time"""
     return datetime.now().strftime("%d/%m/%Y %H:%M")
+
+
+def make_hash(password: str) -> str:
+    return sha256(password.encode()).hexdigest()
+
 
 #### MODELS FOR DATABASE ####
 class Messgae(db.Model):
@@ -85,10 +87,13 @@ class Messgae(db.Model):
 class User(db.Model):
     """Represnt all the users in the database"""
     username = db.Column(db.String(20), nullable=False, primary_key=True, unique=False)
-    password = db.Column(db.String(20), nullable=False, unique=False)
+    password = db.Column(db.String(len(make_hash(''))), nullable=False, unique=False)
 
     def __repr__(self) -> str:
         return f'<User {self.username}>'
+    
+    def correct_password(self, password: str) -> bool:
+        return self.password == make_hash(password)
 
     @staticmethod
     def find(username):
@@ -99,7 +104,9 @@ class User(db.Model):
     def add(username, password):
         """Add user to database if the user does not exists already."""
         if User.find(username) is None:
-            u = User(username=username, password=password)
+            # save password as hash
+            hash_pass = make_hash(password)
+            u = User(username=username, password=hash_pass)
             db.session.add(u)
             db.session.commit()
     
@@ -124,6 +131,7 @@ class User(db.Model):
         users = User.all_users()
         for user in users:
             User.delete(user_obj=user)
+        
 
 # create the database
 db.create_all()
