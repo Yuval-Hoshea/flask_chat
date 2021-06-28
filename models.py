@@ -35,7 +35,7 @@ class Messgae(db.Model):
     id = db.Column(db.Integer, primary_key=True) # id for each message
     username = db.Column(db.String(20), nullable=False) # username that wrote the message
     message = db.Column(db.String(100), nullable=False) # the message
-    datetime = db.Column(db.String(16), nullable=False) # when the message was sent
+    datetime = db.Column(db.String(len(current_time())), nullable=False) # when the message was sent
 
     def __repr__(self) -> str:
         return f'<Message from User {self.username} at {self.datetime}>'
